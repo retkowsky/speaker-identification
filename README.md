@@ -1,4 +1,4 @@
-# 🎙️ Speaker Identification
+# 🎙️ Speaker Identification using Voice audio embeddings and Azure AI Search or Qdrant
 
 <img src="image1.png">
 

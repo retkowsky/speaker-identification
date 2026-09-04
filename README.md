@@ -162,7 +162,3 @@ This project is provided as-is. Please check the repository for license informat
 ## Support
 
 For issues, questions, or suggestions, please open an issue on the GitHub repository.
-
----
-
-**Note**: This is a private repository. Access is restricted to authorized users.

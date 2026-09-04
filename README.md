@@ -114,7 +114,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## Author
 
-**retkowsky** - [GitHub Profile](https://github.com/retkowsky)
+**Serge Retkowsky** - AI&APPS GBB - Microsoft France [GitHub Profile](https://github.com/retkowsky)
 
 ## Repository Details
 

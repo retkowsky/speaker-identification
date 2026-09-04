@@ -128,12 +128,6 @@ The solution follows this workflow:
 
 Contributions are welcome! Please feel free to submit pull requests or open issues.
 
-## Repository Details
-
-- **Repository**: retkowsky/speaker-identification
-- **Created**: September 4, 2026
-- **Last Updated**: September 4, 2026
-
 ## License
 
 This project is provided as-is. Please check the repository for license information.

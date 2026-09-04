@@ -46,7 +46,7 @@ This repository contains implementations and experiments for **speaker identific
 
 ## Project Structure
 
-This is a Jupyter Notebook-based project (100% Jupyter Notebook).
+This is a Jupyter Python Notebook-based project.
 
 ## Use Cases
 

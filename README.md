@@ -55,17 +55,6 @@ This is a Jupyter Python Notebook-based project.
 - **Voice Authentication**: Use speaker characteristics for authentication
 - **Audio Analysis**: Analyze and classify audio based on speaker identity
 
-## Topics
-
-- Audio Processing
-- Azure
-- Embeddings
-- Foundry
-- Speaker Identification
-- Speaker Recognition
-- Speaker Verification
-- Voice Recognition
-
 ## Getting Started
 
 ### Prerequisites

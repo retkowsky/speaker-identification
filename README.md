@@ -6,6 +6,29 @@
 
 Speaker identification with embeddings and Azure AI Search/Qdrant
 
+## Architecture Overview
+
+```mermaid
+graph LR
+    A["🎙️ Audio Input"] --> B["📊 Feature Extraction"]
+    B --> C["🧮 Embedding Generation"]
+    C --> D["🗂️ Vector Storage"]
+    D -->|Azure AI Search| E["🔍 Semantic Search"]
+    D -->|Qdrant| F["⚡ Similarity Match"]
+    E --> G["✅ Speaker Identified"]
+    F --> G
+    G --> H["📋 Results & Verification"]
+    
+    style A fill:#e1f5ff
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#f1f8e9
+    style E fill:#e8f5e9
+    style F fill:#e8f5e9
+    style G fill:#c8e6c9
+    style H fill:#a5d6a7
+```
+
 ## Overview
 
 This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage embeddings combined with Azure AI Search or Qdrant to identify and verify speakers from audio data.

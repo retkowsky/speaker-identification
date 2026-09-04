@@ -128,10 +128,6 @@ The solution follows this workflow:
 
 Contributions are welcome! Please feel free to submit pull requests or open issues.
 
-## Author
-
-**Serge Retkowsky** - AI&APPS GBB - Microsoft France [GitHub Profile](https://github.com/retkowsky)
-
 ## Repository Details
 
 - **Repository**: retkowsky/speaker-identification
@@ -145,3 +141,15 @@ This project is provided as-is. Please check the repository for license informat
 ## Support
 
 For issues, questions, or suggestions, please open an issue on the GitHub repository.
+
+## Author
+
+| Field | Details |
+| --- | --- |
+| Name | Serge Retkowsky |
+| Created | September 4, 2026 |
+| Last updated | September 4, 2026|
+| Email | serge.retkowsky@microsoft.com |
+| LinkedIn | https://www.linkedin.com/in/serger/ |
+| Medium publications | https://medium.com/@sergems18/ |
+

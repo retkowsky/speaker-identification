@@ -1,4 +1,14 @@
-# Speaker Identification
+# 🎙️ Speaker Identification
+
+<div align="center">
+
+![Speaker Identification](https://img.shields.io/badge/🎙️%20Speaker%20Identification-Advanced%20Audio%20Processing-2E86AB?style=for-the-badge)
+![Embeddings](https://img.shields.io/badge/Embeddings-Vector%20Search-A23B72?style=for-the-badge)
+![Azure](https://img.shields.io/badge/Azure-Cloud%20Ready-0078D4?style=for-the-badge)
+
+</div>
+
+---
 
 ![GitHub](https://img.shields.io/badge/repo-speaker--identification-blue)
 ![Language](https://img.shields.io/badge/language-Jupyter%20Notebook-orange)
@@ -31,7 +41,7 @@ graph LR
 
 ## Overview
 
-This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage embeddings combined with Azure AI Search or Qdrant to identify and verify speakers from audio data.
+This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage modern AI capabilities for accurate speaker recognition and verification.
 
 ## Key Features
 

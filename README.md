@@ -4,7 +4,7 @@
 ![Language](https://img.shields.io/badge/language-Jupyter%20Notebook-orange)
 ![Status](https://img.shields.io/badge/status-Active-brightgreen)
 
-Speaker identification with embeddings and Azure AI Search/Qdrant
+Speaker identification with embeddings and Azure AI Search or Qdrant for edge applications.
 
 ## Architecture Overview
 
@@ -142,8 +142,6 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 ## Repository Details
 
 - **Repository**: retkowsky/speaker-identification
-- **Visibility**: Private
-- **Default Branch**: main
 - **Created**: September 4, 2026
 - **Last Updated**: September 4, 2026
 

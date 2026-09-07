@@ -24,7 +24,7 @@ Speaker identification with embeddings and Azure AI Search or Qdrant for edge ap
 
 ## Overview
 
-This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage modern AI capabilities for accurate speaker recognition and verification.
+This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage embeddings for accurate speaker recognition and verification.
 
 ## Key Features
 
@@ -90,6 +90,11 @@ Open and run the Jupyter notebooks in this repository to:
 - Index embeddings in Azure AI Search or Qdrant
 - Perform speaker identification tasks
 
+#### Notebooks
+
+- [Audio Search human voices.ipynb](Audio%20Search%20human%20voices.ipynb) - Main notebook for audio search with Azure AI Search
+- [Audio Search human voices local.ipynb](Audio%20Search%20human%20voices%20local.ipynb) - Local implementation for audio search with Qdrant
+
 ## Architecture
 
 The solution follows this workflow:
@@ -135,4 +140,3 @@ For issues, questions, or suggestions, please open an issue on the GitHub reposi
 | Email | serge.retkowsky@microsoft.com |
 | LinkedIn | https://www.linkedin.com/in/serger/ |
 | Medium publications | https://medium.com/@sergems18/ |
-

@@ -62,7 +62,7 @@ This is a Jupyter Python Notebook-based project.
 - Python 3.8+
 - Jupyter Notebook
 - Azure account (for Azure AI Search)
-- Qdrant (optional, for vector database)
+- Qdrant (for vector database if you do not want to use Azure AI Search)
 - Audio processing libraries
 
 ### Installation

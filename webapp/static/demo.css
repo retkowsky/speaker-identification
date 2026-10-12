@@ -1,0 +1,73 @@
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.demo-journey { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: -8px 0 24px; padding: 12px 16px; border: 1px solid var(--cp-border); border-radius: 10px; background: var(--cp-surface); font-size: 10px; letter-spacing: 1px; color: var(--cp-text-muted); }
+#demo-stage { font-size: 12px; letter-spacing: 0; color: var(--cp-accent); }
+#demo-stage[data-stage="listening"]::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--cp-danger); margin-right: 8px; }
+.mic-orb { --voice-level: 0; width: 112px; height: 112px; position: relative; isolation: isolate; background: radial-gradient(circle at 32% 28%, var(--cp-surface), var(--cp-accent-soft)); border: 1px solid var(--cp-border); transform: scale(calc(1 + var(--voice-level) * .14)); box-shadow: 0 0 calc(12px + var(--voice-level) * 50px) var(--cp-accent-soft); transition: transform 80ms linear; }
+.mic-orb::before, .mic-orb::after { content: ""; position: absolute; inset: -9px; border: 1px solid var(--cp-accent); border-radius: 50%; opacity: calc(.12 + var(--voice-level) * .6); pointer-events: none; }
+.mic-orb::after { inset: -20px; opacity: calc(.06 + var(--voice-level) * .3); }
+.mic-orb.recording { animation: none; }
+.audio-energy { display: flex; align-items: center; gap: 16px; justify-content: space-between; font-size: 10px; color: var(--cp-text-muted); }
+#input-level { width: 40%; height: 12px; }
+#input-level::-webkit-meter-optimum-value { background: var(--cp-accent); }
+.spectrogram-panel { margin: 14px 0 22px; border: 1px solid var(--cp-border); border-radius: 12px; overflow: hidden; background: var(--cp-bg-elevated); text-align: left; }
+.spectrogram-heading { display: flex; justify-content: space-between; padding: 8px 12px; font: 10px var(--cp-font); color: var(--cp-text-muted); }
+#spectrogram { display: block; width: 100%; height: 72px; background: var(--cp-surface-soft); }
+.spectrogram-panel figcaption { font-size: 10px; line-height: 1.5; color: var(--cp-text-muted); padding: 8px 12px; }
+#best-score-track { position: relative; margin-top: 8px; }
+#score-bar { margin-top: 0; transform-origin: left center; }
+#best-threshold-marker { position: absolute; inset: 0; pointer-events: none; }
+.threshold-marker { position: absolute; top: -4px; bottom: -4px; width: 2px; transform: translateX(-50%); background: var(--cp-text); box-shadow: 0 0 0 1px var(--cp-surface); z-index: 1; pointer-events: auto; }
+.threshold-marker::before { content: ""; position: absolute; top: -4px; left: -3px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid var(--cp-text); }
+.similarity-track > span { transform-origin: left center; }
+.match-summary { border-radius: 14px; padding: 16px; background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); }
+#result-content[data-outcome="matched"] .match-summary { border-color: var(--cp-accent); background: var(--cp-accent-soft); box-shadow: 0 0 28px var(--cp-accent-soft); }
+#result-content[data-outcome="rejected"] .match-summary { border-color: var(--cp-danger); }
+.constellation-card { grid-column: 1 / -1; background: var(--cp-surface); }
+.constellation-card .card-heading { margin-bottom: 12px; }
+#constellation-status { padding: 36px 0; text-align: center; font-size: 13px; }
+.map-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; }
+.map-toolbar .secondary { min-height: 36px; padding: 8px 12px; font-size: 12px; }
+.map-dimensions { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--cp-border); border-radius: 10px; }
+.map-dimensions [aria-pressed="true"], #map-spin[aria-pressed="true"] { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+.map-zoom-control { display: flex; align-items: center; gap: 10px; flex: 1 1 260px; max-width: 400px; min-width: 0; font-size: 12px; }
+.map-zoom-control .secondary { padding: 4px; min-width: 30px; min-height: 30px; font-size: 18px; }
+.map-zoom-control input { flex: 1; min-width: 36px; width: 100%; }
+.map-zoom-control output { min-width: 4ch; font-variant-numeric: tabular-nums; text-align: right; }
+.map-zoom-control input { accent-color: var(--cp-accent); padding: 0; cursor: pointer; }
+.map-viewport { position: relative; margin-top: 16px; overflow: hidden; border: 1px solid var(--cp-border); border-radius: 10px; background: var(--cp-surface); }
+.map-view-badge { position: absolute; top: 12px; left: 14px; font: 10px var(--cp-font); letter-spacing: 1px; color: var(--cp-text-muted); pointer-events: none; z-index: 1; }
+.constellation-legend { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 18px; color: var(--cp-text-muted); font-size: 11px; }
+.reference-legend::before, .match-legend::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--cp-danger); border-radius: 50%; margin-right: 8px; }
+.match-legend::before { background: var(--cp-success); }
+#constellation-query-legend::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--cp-text); transform: rotate(45deg); margin-right: 8px; }
+#constellation-svg { width: 100%; height: clamp(320px, 35vw, 480px); display: block; stroke: none; overflow: hidden; cursor: grab; user-select: none; }
+#constellation-svg:focus-visible { outline: 2px solid var(--cp-accent); outline-offset: -3px; }
+#constellation-svg.dragging, #constellation-svg.dragging .reference-point { cursor: grabbing; }
+.map-connection { stroke: var(--cp-danger); stroke-width: 1; stroke-dasharray: 3 5; opacity: .55; }
+.map-connection.matched { stroke: var(--cp-success); }
+.reference-point { cursor: pointer; outline: none; }
+.point-hit { fill: transparent; stroke: none; }
+.point-core { fill: var(--cp-danger); opacity: .8; }
+.point-ring { fill: none; stroke: none; pointer-events: none; }
+.reference-point.nearest .point-core { opacity: 1; }
+.reference-point.nearest .point-ring { stroke: var(--cp-danger); stroke-width: 1; }
+.reference-point.matched .point-core { fill: var(--cp-success); opacity: 1; }
+.reference-point.matched .point-ring { stroke: var(--cp-success); stroke-width: 1; }
+.reference-point.selected .point-ring, .reference-point:focus-visible .point-ring { stroke: var(--cp-text); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.reference-point.selected .point-core, .reference-point:hover .point-core { opacity: 1; }
+.query-halo { fill: var(--cp-surface); stroke: var(--cp-border); stroke-width: 1; }
+.query-core { fill: var(--cp-text); stroke: var(--cp-surface); stroke-width: 2; }
+.query-point { pointer-events: none; }
+.query-label, .point-label { font: 600 12px var(--cp-font); fill: var(--cp-text); paint-order: stroke; stroke: var(--cp-surface); stroke-width: 4; pointer-events: none; }
+.point-label, .point-label-leader { visibility: hidden; }
+.point-label { font-size: 11px; stroke-width: 3; }
+.point-score { font-weight: 400; }
+.point-score.below { fill: var(--cp-danger); }
+.point-match { fill: var(--cp-success); font-weight: 600; }
+.point-label-leader { stroke: var(--cp-text-muted); stroke-width: .7; opacity: .65; pointer-events: none; }
+.map-select-label { display: block; font-size: 12px; margin: 16px 0 6px; }
+#constellation-select { width: 100%; }
+#constellation-detail { margin-top: 8px; overflow-wrap: anywhere; min-height: 2em; }
+@media (prefers-reduced-motion: reduce) {
+  .mic-orb { transform: none; transition: none; }
+}

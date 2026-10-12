@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voiceprint - Design concepts</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font: 15px/1.5 "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--cp-accent); outline-offset: 4px; }
+    button:disabled { cursor: default; }
+    .design-bar { padding: 20px 32px; background: var(--cp-surface); border-bottom: 1px solid var(--cp-border); display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--cp-text-muted); }
+    .design-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .design-tabs button, .theme-button { border: 1px solid var(--cp-border); border-radius: 10px; background: var(--cp-surface); color: var(--cp-text-muted); padding: 10px 18px; }
+    .design-tabs button[aria-pressed="true"] { background: var(--cp-text); border-color: var(--cp-text); color: var(--cp-surface); }
+    .theme-button { margin-left: auto; }
+    .concept-note { max-width: 1300px; padding: 20px 32px 16px; margin: auto; display: flex; justify-content: space-between; gap: 24px; color: var(--cp-text-muted); font-size: 13px; }
+    .concept-note strong { color: var(--cp-text); }
+    .mockup { max-width: 1236px; margin: 0 auto 24px; border: 1px solid var(--cp-border); border-radius: 16px; overflow: hidden; background: var(--cp-bg-elevated); }
+    .app-header { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 24px 32px; border-bottom: 1px solid var(--cp-border); background: var(--cp-surface); }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 22px; letter-spacing: -0.7px; }
+    .logo { display: flex; gap: 3px; align-items: center; height: 36px; padding: 8px; border-radius: 10px; background: var(--cp-accent); color: var(--cp-accent-fg); }
+    .logo i { display: block; width: 3px; background: currentColor; border-radius: 4px; }
+    .logo i:nth-child(1), .logo i:nth-child(5) { height: 8px; }
+    .logo i:nth-child(2), .logo i:nth-child(4) { height: 16px; }
+    .logo i:nth-child(3) { height: 24px; }
+    .nav { display: flex; gap: 28px; align-items: center; font-size: 13px; color: var(--cp-text-muted); }
+    .nav .active { font-weight: 600; color: var(--cp-accent); }
+    .badge { font-size: 11px; font-weight: 600; border: 1px solid var(--cp-border); border-radius: 6px; padding: 4px 8px; color: var(--cp-text-muted); white-space: nowrap; }
+    .content { padding: 36px; }
+    h1 { font-size: clamp(28px, 3.5vw, 42px); letter-spacing: -1.6px; line-height: 1.15; margin: 8px 0 12px; font-weight: 650; }
+    h2 { font-size: 19px; letter-spacing: -0.4px; margin: 0 0 8px; }
+    h3 { margin: 0; font-size: 15px; }
+    p { margin: 0; color: var(--cp-text-muted); }
+    .intro { margin-bottom: 28px; }
+    .columns { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
+    .card { background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; padding: 24px; }
+    .switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--cp-surface-soft); border-radius: 10px; }
+    .switch button { border: 0; padding: 10px; border-radius: 8px; color: var(--cp-text-muted); background: var(--cp-surface-soft); }
+    .switch button[aria-pressed="true"] { background: var(--cp-surface); color: var(--cp-accent); font-weight: 600; }
+    .capture { text-align: center; padding: 32px 8px 12px; }
+    .mic { display: grid; place-items: center; margin: 0 auto 20px; width: 80px; height: 80px; border-radius: 50%; background: var(--cp-accent-soft); color: var(--cp-accent); }
+    svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .wave { display: flex; align-items: center; justify-content: center; gap: 4px; height: 64px; margin: 16px 0; overflow: hidden; }
+    .wave i { width: 4px; flex-shrink: 0; border-radius: 4px; background: var(--cp-accent); opacity: .7; }
+    .primary { background: var(--cp-accent); color: var(--cp-accent-fg); border: 0; border-radius: 10px; padding: 12px 24px; font-weight: 600; }
+    .secondary { border: 1px solid var(--cp-border); background: var(--cp-surface); color: var(--cp-text); border-radius: 10px; padding: 10px 16px; }
+    .small { font-size: 12px; color: var(--cp-text-muted); }
+    .capture .small { margin-top: 12px; }
+    .result-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 24px; }
+    .avatar { width: 52px; height: 52px; background: var(--cp-accent-soft); color: var(--cp-accent); border-radius: 12px; display: grid; place-items: center; font-size: 18px; font-weight: 600; }
+    .person { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .person h2 { margin-bottom: 2px; font-size: 24px; }
+    .score { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .score strong { font-size: 30px; font-weight: 600; letter-spacing: -1px; }
+    .track { height: 6px; background: var(--cp-surface-soft); border-radius: 4px; overflow: hidden; }
+    .track span { display: block; height: 100%; width: var(--score); background: var(--cp-accent); }
+    .divider { border-top: 1px solid var(--cp-border); margin: 20px 0; }
+    .row { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; font-size: 13px; }
+    .mono { font-family: Consolas, "Courier New", Courier, monospace; }
+    .callout { margin-top: 16px; padding: 16px; border: 1px solid var(--cp-border); border-radius: 10px; display: flex; gap: 16px; justify-content: space-between; align-items: center; }
+    .app-footer { padding: 16px 32px; display: flex; gap: 16px; justify-content: space-between; border-top: 1px solid var(--cp-border); font-size: 11px; color: var(--cp-text-muted); }
+    .upload { margin: 24px 0 16px; padding: 36px 16px; text-align: center; border: 1px dashed var(--cp-border-strong); border-radius: 12px; background: var(--cp-bg-elevated); }
+    .upload svg { color: var(--cp-accent); margin-bottom: 12px; }
+    .upload p { margin: 8px 0 20px; }
+    [hidden] { display: none !important; }
+    .console-layout { display: grid; grid-template-columns: 180px 1fr; }
+    .sidebar { padding: 28px 16px; border-right: 1px solid var(--cp-border); background: var(--cp-surface); }
+    .sidebar .eyebrow { margin: 0 12px 20px; }
+    .sidebar-item { padding: 12px; border-radius: 8px; font-size: 13px; margin: 4px 0; color: var(--cp-text-muted); }
+    .sidebar-item.active { background: var(--cp-accent-soft); color: var(--cp-accent); font-weight: 600; }
+    .console-main { padding: 28px; min-width: 0; }
+    .console-main h1 { font-size: 30px; letter-spacing: -1px; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+    .metric { padding: 16px; }
+    .metric strong { display: block; font-size: 22px; margin-top: 4px; }
+    .console-main .columns { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .console-main .capture { padding-top: 20px; }
+    .console-main .wave { height: 48px; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    th { font-weight: 500; color: var(--cp-text-muted); padding: 12px 8px; border-bottom: 1px solid var(--cp-border); }
+    td { padding: 14px 8px; border-bottom: 1px solid var(--cp-border); }
+    tr.top { background: var(--cp-accent-soft); }
+    .steps { display: flex; justify-content: center; gap: 40px; padding: 24px; border-bottom: 1px solid var(--cp-border); }
+    .step { display: flex; align-items: center; gap: 10px; color: var(--cp-text-muted); font-size: 13px; }
+    .step span { border: 1px solid var(--cp-border); border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; }
+    .step.active { color: var(--cp-accent); font-weight: 600; }
+    .step.active span { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .guided { max-width: 760px; padding: 32px; margin: auto; text-align: center; }
+    .guided .intro { margin-bottom: 24px; }
+    .guided h1 { font-size: 36px; }
+    .guided .card { text-align: left; }
+    .guided .capture { padding-top: 24px; }
+    .guided .mic { margin-bottom: 12px; width: 64px; height: 64px; }
+    .guided-result { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 16px; background: var(--cp-accent-soft); border-radius: 10px; padding: 16px; text-align: left; }
+    .guided-result strong { display: block; }
+    .design-footer { text-align: center; font-size: 12px; padding: 0 24px 24px; color: var(--cp-text-muted); }
+    @media (max-width: 850px) {
+      .mockup { margin: 0 16px 24px; }
+      .columns, .console-main .columns { grid-template-columns: 1fr; }
+      .console-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .nav { gap: 12px; }
+      .nav .badge { display: none; }
+      .content, .console-main, .guided { padding: 24px; }
+      .concept-note { flex-direction: column; gap: 4px; }
+    }
+    @media (max-width: 520px) {
+      .design-bar, .app-header { padding: 16px; gap: 16px; }
+      .theme-button { margin-left: 0; }
+      .app-header .nav { display: none; }
+      .steps { gap: 16px; padding: 16px 8px; }
+      .step { font-size: 11px; gap: 6px; }
+      .metrics { grid-template-columns: 1fr; }
+      .callout, .app-footer { align-items: start; flex-direction: column; }
+      .content, .console-main, .guided { padding: 20px 16px; }
+      .card { padding: 16px; }
+      .design-tabs button { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="design-bar">
+    <div><div class="eyebrow">Voiceprint / Design review</div><strong>Choose your workspace</strong></div>
+    <nav class="design-tabs" aria-label="Design concept">
+      <button type="button" data-concept="studio" aria-pressed="true">01 Studio</button>
+      <button type="button" data-concept="console" aria-pressed="false">02 Analyst Console</button>
+      <button type="button" data-concept="guided" aria-pressed="false">03 Guided</button>
+    </nav>
+    <button type="button" class="theme-button" id="theme">Toggle light / dark</button>
+  </header>
+  <div class="concept-note"><span id="description"><strong>01 / Studio.</strong> A calm, balanced workspace. Record on the left, see the match on the right.</span><span>VISUAL PREVIEW / Illustrative data only</span></div>
+  <main>
+    <section class="mockup" id="studio" aria-label="Studio concept">
+      <header class="app-header"><div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>voiceprint<span class="badge">STUDIO</span></div><div class="nav"><span class="active">Identify</span><span>Speaker library</span><span class="badge">ECAPA-TDNN</span></div></header>
+      <div class="content">
+        <div class="intro"><div class="eyebrow">Speaker recognition, made simple</div><h1>A voice. A familiar match.</h1><p>Record a few seconds or upload a WAV to find the closest enrolled speaker.</p></div>
+        <div class="columns">
+          <div>
+            <div class="card">
+              <div class="switch" aria-label="Studio audio source"><button type="button" data-source="mic" aria-pressed="true">Microphone</button><button type="button" data-source="wav" aria-pressed="false">Upload WAV</button></div>
+              <div class="mic-pane capture"><div class="mic" data-icon="mic"></div><h2>Let your voice do the talking.</h2><p>Speak naturally in a quiet space.</p><div class="wave" aria-hidden="true"></div><button type="button" class="primary" disabled>Start recording</button><p class="small">Microphone access will be requested in the working app.</p></div>
+              <div class="wav-pane" hidden><div class="upload"><span data-icon="upload"></span><h2>Drop your WAV file here</h2><p>Compare one speaker at a time.</p><button type="button" class="primary" disabled>Browse files</button></div><p class="small">The working app will validate and normalize the audio.</p></div>
+            </div>
+            <div class="callout"><div><h3>New voice? Start with a reference.</h3><p class="small">Enroll your voice so it can be recognized next time.</p></div><button type="button" class="secondary" disabled>Add speaker</button></div>
+          </div>
+          <div class="card">
+            <div class="result-head"><h3>Recognition result</h3><span class="badge">SAMPLE RESULT</span></div>
+            <div class="person"><div class="avatar">S1</div><div><h2>Speaker 0001</h2><p>Closest reference voice</p></div></div>
+            <div class="score"><span class="small">Cosine similarity</span><strong class="mono">0.86</strong></div><div class="track"><span style="--score:86%"></span></div>
+            <p class="small" style="margin-top:12px">Similarity is a comparison score, not an identity probability.</p>
+            <div class="divider"></div><div class="eyebrow">Other candidates</div><div class="row"><span>Speaker 1272</span><span class="mono">0.42</span></div><div class="row"><span>Speaker 1462</span><span class="mono">0.31</span></div>
+            <div class="divider"></div><p class="small">No reliable match? The app will show <strong>Unknown speaker</strong> instead of forcing an identity.</p>
+          </div>
+        </div>
+      </div>
+      <footer class="app-footer"><span>Voice embeddings / ECAPA-TDNN</span><span>Use only recordings you have permission to process.</span></footer>
+    </section>
+    <section class="mockup" id="console" aria-label="Analyst Console concept" hidden>
+      <header class="app-header"><div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>voiceprint<span class="badge">CONSOLE</span></div><span class="badge">EXPERIMENT WORKSPACE</span></header>
+      <div class="console-layout">
+        <aside class="sidebar"><div class="eyebrow">Workspace</div><div class="sidebar-item active">Speaker identification</div><div class="sidebar-item">Speaker library</div><div class="divider"></div><div class="sidebar-item small">Model<br><strong>ECAPA-TDNN</strong><br>SpeechBrain</div></aside>
+        <div class="console-main">
+          <div class="eyebrow">Analyze / Compare / Identify</div><h1>Speaker identification</h1><p>From an audio sample to a ranked set of reference voices.</p>
+          <div class="metrics"><div class="card metric"><span class="small">Reference audio in ZIP</span><strong>82 WAVs</strong></div><div class="card metric"><span class="small">Model input</span><strong>16 kHz</strong></div><div class="card metric"><span class="small">Similarity metric</span><strong>Cosine</strong></div></div>
+          <div class="columns">
+            <div class="card"><div class="result-head"><h3>01 / Audio input</h3><span class="badge">PREVIEW</span></div><div class="switch" aria-label="Console audio source"><button type="button" data-source="mic" aria-pressed="true">Microphone</button><button type="button" data-source="wav" aria-pressed="false">Upload WAV</button></div><div class="mic-pane capture"><div class="wave" aria-hidden="true"></div><p class="mono small">READY TO CAPTURE</p><button type="button" class="primary" style="margin-top:20px" disabled>Record sample</button><p class="small">One speaker. A few seconds of clear speech.</p></div><div class="wav-pane" hidden><div class="upload"><span data-icon="upload"></span><h3>Select an audio sample</h3><p class="small">WAV input / Single speaker</p><button type="button" class="primary" disabled>Browse files</button></div></div><div class="divider"></div><div class="row"><span class="small">Processing pipeline</span><span class="mono small">Audio &gt; Embedding</span></div></div>
+            <div class="card"><div class="result-head"><h3>02 / Nearest speakers</h3><span class="badge">SAMPLE</span></div><table><thead><tr><th>Rank</th><th>Speaker</th><th>Similarity</th></tr></thead><tbody><tr class="top"><td>01</td><td>Speaker 0001</td><td class="mono">0.860</td></tr><tr><td>02</td><td>Speaker 1272</td><td class="mono">0.420</td></tr><tr><td>03</td><td>Speaker 1462</td><td class="mono">0.310</td></tr></tbody></table><div class="row" style="margin-top:12px"><span>Top candidate gap</span><strong class="mono">0.440</strong></div><p class="small">Illustrative scores, not a live analysis. Rejection thresholds require calibration.</p></div>
+          </div>
+          <div class="callout"><span class="small"><strong>Reference library</strong> / Add a named voice before identifying yourself.</span><button type="button" class="secondary" disabled>Enroll speaker</button></div>
+        </div>
+      </div>
+      <footer class="app-footer"><span>Inspection-first layout / Ranked matches and model context</span><span>Not a biometric authentication system.</span></footer>
+    </section>
+    <section class="mockup" id="guided" aria-label="Guided concept" hidden>
+      <header class="app-header"><div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>voiceprint</div><span class="badge">GUIDED EXPERIENCE</span></header>
+      <div class="steps"><div class="step active"><span>1</span>Add audio</div><div class="step"><span>2</span>Compare voices</div><div class="step"><span>3</span>See your match</div></div>
+      <div class="guided">
+        <div class="intro"><div class="eyebrow">Start with a sound</div><h1>Who's speaking?</h1><p>A few seconds of speech is a good place to start.</p></div>
+        <div class="card"><div class="switch" aria-label="Guided audio source"><button type="button" data-source="mic" aria-pressed="true">I'll use my microphone</button><button type="button" data-source="wav" aria-pressed="false">I have a WAV file</button></div><div class="mic-pane capture"><div class="mic" data-icon="mic"></div><h2>Ready when you are.</h2><p>Try: "This is a short sample of my natural voice."</p><div class="wave" aria-hidden="true"></div><button type="button" class="primary" disabled>Start recording</button><p class="small">You'll be able to review your recording before analysis.</p></div><div class="wav-pane" hidden><div class="upload"><span data-icon="upload"></span><h2>Bring your own recording.</h2><p>Choose a WAV with one person speaking clearly.</p><button type="button" class="primary" disabled>Choose a WAV file</button></div></div></div>
+        <div class="guided-result"><div><span class="eyebrow">Example of the final step</span><strong>Closest voice: Speaker 0001</strong><span class="small">Cosine similarity 0.86 / Illustrative result</span></div><span class="badge">SAMPLE</span></div>
+        <p class="small" style="margin-top:20px">First visit? Enroll a reference voice before trying to recognize yourself.<br>Unrecognized voices will be shown as unknown.</p>
+      </div>
+      <footer class="app-footer"><span>One task at a time. No technical expertise needed.</span><span>Only process audio with permission.</span></footer>
+    </section>
+  </main>
+  <footer class="design-footer">Design concepts only. Tabs and theme controls work; recording, upload, enrollment, and recognition are not connected.</footer>
+  <script>
+    const descriptions = {
+      studio: "<strong>01 / Studio.</strong> A calm, balanced workspace. Record on the left, see the match on the right.",
+      console: "<strong>02 / Analyst Console.</strong> A technical workspace for comparing candidates and inspecting scores.",
+      guided: "<strong>03 / Guided.</strong> A friendly, focused flow with one clear step at a time."
+    };
+    document.querySelectorAll("[data-concept]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-concept]").forEach(tab => {
+          const selected = tab === button;
+          tab.setAttribute("aria-pressed", String(selected));
+          document.getElementById(tab.dataset.concept).hidden = !selected;
+        });
+        document.getElementById("description").innerHTML = descriptions[button.dataset.concept];
+      });
+    });
+    document.querySelectorAll("[data-source]").forEach(button => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".card");
+        card.querySelectorAll("[data-source]").forEach(tab => tab.setAttribute("aria-pressed", String(tab === button)));
+        card.querySelector(".mic-pane").hidden = button.dataset.source !== "mic";
+        card.querySelector(".wav-pane").hidden = button.dataset.source !== "wav";
+      });
+    });
+    document.getElementById("theme").addEventListener("click", () => {
+      document.documentElement.dataset.theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    });
+    const icons = {
+      mic: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="2" width="8" height="13" rx="4"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3m-4 0h8"/></svg>',
+      upload: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg>'
+    };
+    document.querySelectorAll("[data-icon]").forEach(element => { element.innerHTML = icons[element.dataset.icon]; });
+    document.querySelectorAll(".wave").forEach(wave => {
+      for (let i = 0; i < 43; i++) {
+        const bar = document.createElement("i");
+        bar.style.height = `${8 + Math.abs(Math.sin(i * 1.7) * Math.cos(i * .34)) * 46}px`;
+        wave.appendChild(bar);
+      }
+    });
+  </script>
+</body>
+</html>

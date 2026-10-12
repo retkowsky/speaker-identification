@@ -13,7 +13,7 @@
 ---
 
 ![GitHub](https://img.shields.io/badge/repo-speaker--identification-blue)
-![Language](https://img.shields.io/badge/language-Jupyter%20Notebook-orange)
+![Language](https://img.shields.io/badge/language-Python%20%7C%20JavaScript%20%7C%20Jupyter-orange)
 ![Status](https://img.shields.io/badge/status-Active-brightgreen)
 
 Speaker identification with embeddings and Azure AI Search or Qdrant for edge applications.
@@ -24,7 +24,7 @@ Speaker identification with embeddings and Azure AI Search or Qdrant for edge ap
 
 ## Overview
 
-This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. The project demonstrates how to leverage embeddings for accurate speaker recognition and verification.
+This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. It includes the original Jupyter workflows and a local, browser-based application for interactive identification, enrollment, visualization, and report export.
 
 ## Key Features
 
@@ -34,6 +34,8 @@ This repository contains implementations and experiments for **speaker identific
 - **Qdrant Support**: Alternative vector database for storing and searching embeddings
 - **Audio Processing**: Handle and process audio data for speaker recognition
 - **Voice Verification**: Verify speaker identity from voice samples
+- **Interactive Web Application**: Run a guided FastAPI and browser workflow locally
+- **Secure Local API**: Use per-launch authentication, loopback binding, and trusted model verification
 
 ## Technologies
 
@@ -43,10 +45,16 @@ This repository contains implementations and experiments for **speaker identific
 - **Azure Services**: Cloud-based services for scalability
 - **Foundry**: Development and deployment framework
 - **Python/Jupyter**: Analysis and development environment
+- **FastAPI and JavaScript**: Local interactive application and microphone workflow
 
 ## Project Structure
 
-This is a Jupyter Python Notebook-based project.
+| Path | Purpose |
+| --- | --- |
+| [`Audio Search human voices.ipynb`](Audio%20Search%20human%20voices.ipynb) | Azure AI Search notebook |
+| [`Audio Search human voices local.ipynb`](Audio%20Search%20human%20voices%20local.ipynb) | Local Qdrant notebook |
+| [`webapp/`](webapp/) | Interactive FastAPI speaker-identification application |
+| [`voices/`](voices/) | Reference audio used by the original notebook workflows |
 
 ## Use Cases
 
@@ -57,7 +65,25 @@ This is a Jupyter Python Notebook-based project.
 
 ## Getting Started
 
-### Prerequisites
+### Interactive web application
+
+The application is in [`webapp/`](webapp/). Its complete installation, security, architecture, operation, and testing documentation is in the [web application README](webapp/README.md).
+
+On Windows with Python 3.11 and PowerShell:
+
+```powershell
+cd webapp
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --index-url https://download.pytorch.org/whl/cpu --no-deps torch==2.6.0+cpu torchaudio==2.6.0+cpu
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe prepare_assets.py
+.\start.ps1
+```
+
+Keep the trusted `voices embeddings.zip` source archive in `webapp/` for initial asset preparation. Open the complete private URL printed by `start.ps1`; each launch generates a new access token. Local Qdrant mode does not require Docker, Azure, or a separate database service.
+
+### Notebook prerequisites
 
 - Python 3.8+
 - Jupyter Notebook
@@ -65,7 +91,7 @@ This is a Jupyter Python Notebook-based project.
 - Qdrant (for vector database if you do not want to use Azure AI Search)
 - Audio processing libraries
 
-### Installation
+### Notebook installation
 
 1. Clone the repository:
 ```bash
@@ -82,7 +108,7 @@ pip install -r requirements.txt
    - Set up Azure credentials for Azure AI Search
    - Configure Qdrant connection (if using)
 
-### Usage
+### Notebook usage
 
 Open and run the Jupyter notebooks in this repository to:
 - Process audio files
@@ -136,7 +162,7 @@ For issues, questions, or suggestions, please open an issue on the GitHub reposi
 | --- | --- |
 | Name | Serge Retkowsky |
 | Created | September 4, 2026 |
-| Last updated | September 4, 2026|
+| Last updated | October 12, 2026 |
 | Email | serge.retkowsky@microsoft.com |
 | LinkedIn | https://www.linkedin.com/in/serger/ |
 | Medium publications | https://medium.com/@sergems18/ |

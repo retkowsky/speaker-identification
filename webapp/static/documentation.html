@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User guide for Speaker Identification with Qdrant, Azure AI Search, and interactive voice embedding visualization.">
+  <title>Speaker Identification | User guide</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="documentation.css">
+</head>
+<body lang="en">
+  <a class="skip-link" href="#guide">Skip to documentation</a>
+  <header>
+    <p class="eyebrow">SPEAKER IDENTIFICATION / DOCUMENTATION</p>
+    <h1>Voice identification, step by step</h1>
+    <p class="lead">A user guide to recording, comparing, and exploring voice embeddings with Qdrant and Azure AI Search.</p>
+    <div class="metadata"><span>Author : <a href="mailto:serge.retkowsky@microsoft.com">serge.retkowsky@microsoft.com</a></span><span>Version 1.0</span><time datetime="2026-10-05">05-10-2026</time></div>
+    <p class="print-hint">English guide. Use your browser's Print command (Ctrl+P) to print or save as PDF. Close this tab to return to your existing app session.</p>
+  </header>
+  <div class="layout">
+    <nav aria-label="Guide contents">
+      <h2>Contents</h2>
+      <a href="#quick-start">1. Quick start</a>
+      <a href="#audio">2. Audio input</a>
+      <a href="#results">3. Understanding results</a>
+      <a href="#spotlight">4. Match spotlight</a>
+      <a href="#library">5. Speaker library</a>
+      <a href="#azure">6. Azure AI Search</a>
+      <a href="#appearance">7. Toolbar &amp; appearance</a>
+      <a href="#privacy">8. Privacy &amp; limitations</a>
+      <a href="#troubleshooting">9. Troubleshooting</a>
+      <a href="#setup">10. Installation &amp; operation</a>
+      <a href="#reports">11. Export analysis reports</a>
+      <a href="#guided-demo">12. Guided demo</a>
+    </nav>
+    <main id="guide">
+      <section id="quick-start">
+        <h2>1. Quick start</h2>
+        <ol>
+          <li>Open the running app at <a href="http://127.0.0.1:8765/" target="_blank" rel="noopener noreferrer">http://127.0.0.1:8765/</a>. Dismiss the welcome screen with <strong>Get started</strong> or <kbd>Escape</kbd>.</li>
+          <li>Choose <strong>Qdrant / Local</strong> and wait for the connection/model status to be ready. First startup takes longer while reference embeddings are prepared.</li>
+          <li>Open <strong>Test audio</strong>, select one of the 41 held-out test clips, and load it. Listen to the playback if desired.</li>
+          <li>Select <strong>Identify speaker</strong>. Read the accepted match or unknown result, ranked similarities, and Match spotlight.</li>
+          <li>Try a different clip or record your own voice. Use <strong>Clear</strong> to remove audio and results without deleting speakers.</li>
+        </ol>
+        <aside class="note">This is a speaker-similarity demo, not identity verification or authentication. A high similarity score is not a probability of identity.</aside>
+      </section>
+      <section id="audio">
+        <h2>2. Audio input</h2>
+        <h3>Microphone</h3>
+        <p>Use Edge or Chrome on localhost. Select <strong>Allow / refresh microphones</strong>, grant access, and choose the input device. This permission step does not record audio. Record one speaker for <strong>2 to 30 seconds</strong>, stop, review playback, and identify.</p>
+        <p>Use a quiet environment and a natural speaking voice. The device choice lasts for this page session and cannot change while recording. If the device disconnects, select an available input and retry.</p>
+        <h3>Upload WAV</h3>
+        <p>Browse or drag a single WAV onto the upload area. Accepted audio is 2-30 seconds, mono or stereo, 8-192 kHz, and no larger than 20 MB. The server converts it to mono at 16 kHz. Silence, malformed audio, and nonfinite samples are rejected; heavy clipping generates a warning.</p>
+        <h3>Test audio</h3>
+        <p>The 41 bundled <code>_segment_2.wav</code> clips are held out from the initial reference library. The expected speaker is displayed so you can compare the result with the label. These clips are not automatically enrolled.</p>
+        <p>The waveform, microphone orb, level meter, and spectrum show actual audio activity, not recognition confidence or an audio-quality score.</p>
+      </section>
+      <section id="results">
+        <h2>3. Understanding results</h2>
+        <p>Open the <strong>Match criteria sliders icon in the top bar</strong> to adjust the minimum similarity and candidate gap. The panel closes on an outside click or Escape without losing edits. Escape returns focus to the icon; changes apply to the next analysis. Invalid values reopen the panel for correction.</p>
+        <p>ECAPA-TDNN computes a normalized <strong>192-dimensional embedding locally</strong>. The selected database compares it with reference embeddings using cosine similarity. Recognition uses the full vectors, never the distance between dots on the plot.</p>
+        <ul>
+          <li><strong>Minimum similarity:</strong> default <code>0.5</code>. The best candidate must meet this threshold.</li>
+          <li><strong>Minimum separation:</strong> default <code>0.05</code> between the two best different speakers. A close runner-up can cause rejection.</li>
+          <li><strong>Unknown speaker:</strong> the strongest candidate is below the threshold or the leading speakers are too similar. This is not proof the speaker is absent.</li>
+          <li><strong>Top N:</strong> default 5. Reducing it trims the list immediately. Increasing it uses cached matches where possible, or reruns the current audio when committed. <strong>Update results</strong> explicitly reruns recognition. Top N = 1 still checks the runner-up for ambiguity.</li>
+        </ul>
+        <p>Bars show similarity on a 0-1 scale, not percentages of certainty. Negative cosine scores remain signed and have empty bars. Values strictly below the applied threshold are red; the bar marker shows that threshold. Changes to criteria apply to the next analysis. Analysis time excludes browser/network time.</p>
+        <aside class="note">The default criteria are not calibrated accuracy guarantees. Test on representative, consented recordings before drawing conclusions about recognition performance.</aside>
+      </section>
+      <section id="spotlight">
+        <h2>4. Match spotlight</h2>
+        <p>Available after identification with <strong>both Qdrant and Azure AI Search</strong>. The badge indicates <strong>LOCAL / PCA</strong> or <strong>AZURE / PCA</strong>. This is a PCA projection, not UMAP or t-SNE.</p>
+        <ul>
+          <li><strong>Green dot:</strong> the accepted speaker's highest-cosine reference sample. At most one reference is green.</li>
+          <li><strong>Red dots:</strong> all other references, including any other samples belonging to the matched speaker. Rejected results have no green dot.</li>
+          <li><strong>Neutral diamond:</strong> your query recording.</li>
+          <li><strong>Candidate links and labels:</strong> follow full-vector cosine matches, not projected distance. Hover, focus, or select a sample to inspect it.</li>
+        </ul>
+        <div class="table-wrap"><table>
+          <caption>Mouse and keyboard controls</caption>
+          <thead><tr><th scope="col">Action</th><th scope="col">2D</th><th scope="col">3D</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Drag / arrow keys</th><td>Pan</td><td>Rotate and tilt</td></tr>
+            <tr><th scope="row">Shift + drag / arrows</th><td>Pan</td><td>Pan</td></tr>
+            <tr><th scope="row">Wheel, slider, minus/plus</th><td colspan="2">Zoom from 50% to 300%</td></tr>
+            <tr><th scope="row">Spin / Stop spin</th><td>Not available</td><td>Automatic rotation</td></tr>
+            <tr><th scope="row">Reset view</th><td colspan="2">Center the map, restore zoom/orientation, and stop spinning without clearing results</td></tr>
+          </tbody>
+        </table></div>
+        <p>Focus the map before using arrow keys. Ctrl/Cmd + wheel remains browser zoom. Manual interaction stops spin. Switching dimensions resets the camera; reduced-motion settings disable automatic spin but retain manual navigation.</p>
+        <p>2D uses the first two PCA components; 3D uses the real third component. Projection loses information: apparent proximity is not evidence of a match. Changing audio, starting another analysis, switching backend, or clearing results clears the plot. A plot error does not discard a valid recognition result; use <strong>Retry map</strong>.</p>
+      </section>
+      <section id="library">
+        <h2>5. Speaker library and enrollment</h2>
+        <ol>
+          <li>Select the backend that should store the new speaker.</li>
+          <li>Record or upload clear speech, then select <strong>Enroll this voice</strong>.</li>
+          <li>Enter a unique name and confirm permission to store the voice embedding.</li>
+          <li>Test using a <strong>different recording</strong> of the same person.</li>
+        </ol>
+        <p>The Speaker library lets you search names, play bundled reference audio, load references as test samples, and delete your own enrollments. Bundled speakers are read-only. Custom enrollment stores the name and embedding, not the recording, so custom voices have no reference playback.</p>
+        <p>Qdrant and Azure libraries are separate. Enrolling or deleting in one does not copy or remove data in the other. Matching a stored reference to itself checks the pipeline, not real-world recognition accuracy.</p>
+      </section>
+      <section id="azure">
+        <h2>6. Azure AI Search</h2>
+        <p>Use an existing Azure AI Search service with vector-search support and a dedicated app-managed index. The app creates an index when authorized, not an Azure service.</p>
+        <ol>
+          <li>Choose <strong>Azure AI Search / Cloud</strong>. Enter the HTTPS service endpoint and dedicated index name, then <strong>Save settings</strong>.</li>
+          <li>Configure authentication on the server. Prefer Microsoft Entra ID via <code>DefaultAzureCredential</code> (for example, <code>az login</code> for development). Index management needs <strong>Search Service Contributor</strong>; querying/writing documents needs <strong>Search Index Data Contributor</strong>. Role-based data access must be enabled on the service.</li>
+          <li>Alternatively, configure <code>AZURE_SEARCH_API_KEY</code> with an admin key and the matching <code>AZURE_SEARCH_ENDPOINT</code> in the server's <code>.env</code>. Never put credentials in browser code or documentation. Restart the server after changing its credentials.</li>
+          <li>Select <strong>Check connection</strong>. Saving settings or checking a connection does not create the index.</li>
+          <li>Read and check the consent box, then choose <strong>Initialize / repair reference index</strong> to upload the 41 bundled reference embeddings and labels.</li>
+          <li>Identify or enroll against the cloud library. Allow time for indexing changes to become searchable.</li>
+        </ol>
+        <p>Incompatible indexes are rejected rather than overwritten. Initialization does not copy your custom local enrollments or upload raw audio. Cloud failures are reported explicitly, with no automatic fallback to local matching.</p>
+        <h3>Azure Spotlight requirements</h3>
+        <p>Spotlight retrieves reference vectors server-side to compute PCA. New indexes make <code>audio_embeddings</code> retrievable. On first projection, an existing compatible index's hidden field is made retrievable using a conditional schema update, requiring index-update permission; documents are not rebuilt or re-uploaded. Clients with query access can then request those vectors.</p>
+        <p>If the field was created with <code>stored=false</code>, this cannot be enabled on that field. Use a dedicated index with stored vectors; the app will report the limitation rather than rebuild it. Missing vectors or permission errors can disable Spotlight while recognition continues.</p>
+        <h3>Panel and settings</h3>
+        <p>Close the panel with its top-right X and reopen it with <strong>Azure AI Search</strong> in the toolbar. Closing does not discard unsaved edits, clear consent, switch backend, or interrupt requests. Unsaved configuration edits disable cloud recognition until resolved. Endpoint/index settings are stored on this computer and shared across tabs; credentials remain server-side.</p>
+      </section>
+      <section id="appearance">
+        <h2>7. Toolbar and appearance</h2>
+        <ul>
+          <li><strong>LOCAL / CLOUD badge:</strong> shows the selected backend, not connection readiness. Check the separate connection status.</li>
+          <li><strong>Match criteria icon:</strong> opens the similarity and candidate-gap controls previously shown below the results. Only one of Match criteria and Appearance can be open at a time.</li>
+          <li><strong>Appearance / Apparence:</strong> opens palette, font, and background controls. Outside click or Escape closes it; Escape returns focus to the opener.</li>
+          <li><strong>Palette:</strong> Amber, Forest, Ocean, or Rose, each in light/dark mode. The default is Ocean with Tahoma font. Fonts use local installations.</li>
+          <li><strong>Background:</strong> import PNG, JPEG, or WebP up to 8 MB, 8192 pixels per side, and 20 megapixels. The adjacent remove button restores a plain background.</li>
+          <li><strong>EN / FR:</strong> changes application labels without clearing audio or results. This guide is in English.</li>
+          <li><strong>Clear / Effacer:</strong> clears audio, playback, visuals, and results, but not speakers, preferences, criteria, Top N, or the chosen microphone. Disabled during recording or requests.</li>
+          <li><strong>Sidebar:</strong> drag the divider or use its arrow keys, Home/End; double-click to reset its width. Mobile navigation wraps instead.</li>
+        </ul>
+        <p>Language, theme, font, backend, and sidebar width are saved in browser local storage. Background images stay in this browser's IndexedDB and are not uploaded. Clearing browser site data removes these preferences and images, but does not delete server-side speaker libraries.</p>
+      </section>
+      <section id="privacy">
+        <h2>8. Privacy and limitations</h2>
+        <ul>
+          <li>Use only recordings you have permission to process and enroll. Voice embeddings are sensitive biometric data.</li>
+          <li>Embedding computation is local in both modes. Azure identification sends the query embedding; Azure enrollment stores the embedding and name. Raw audio is not sent to Azure.</li>
+          <li>Identification audio is processed in server memory, not saved. Enrollment persists names and embeddings in the selected database.</li>
+          <li>Browser plot responses contain projected coordinates and scores, not raw 192-dimensional vectors. Names and derived visualizations can still be sensitive; handle screenshots carefully.</li>
+          <li>Protect local databases, the Azure index, and backups. A workspace inside OneDrive may sync local files; use a non-synced location when needed.</li>
+          <li>The demo is not liveness detection, authentication, diarization, or verified identity recognition. Replays, synthetic voices, noise, overlapping speakers, and recording conditions can mislead it.</li>
+        </ul>
+        <aside class="note">The app is intended for loopback access on your computer. Remote hosting needs additional authentication, HTTPS, and security work; do not simply expose this development server publicly.</aside>
+      </section>
+      <section id="troubleshooting">
+        <h2>9. Troubleshooting</h2>
+        <dl>
+          <dt>Microphone permission is denied or no device is available</dt><dd>Check browser and OS permissions, connect a microphone, and use Allow / refresh microphones again. WAV upload remains available.</dd>
+          <dt>Audio is rejected</dt><dd>Check format, duration, size, and recording level. Record audible speech without clipping; do not submit silence.</dd>
+          <dt>A known person is marked unknown</dt><dd>Try a separate, clear recording and confirm enrollment in the selected backend. Review similarity and separation; do not assume relaxing thresholds improves accuracy.</dd>
+          <dt>Azure cannot connect</dt><dd>Save endpoint/index edits, check server credentials and assigned roles, then check the connection. A service-bound API key cannot be forwarded to a different endpoint. Consult server logs without sharing credentials.</dd>
+          <dt>Azure enrollment is not visible yet</dt><dd>Indexing is eventually consistent. Wait briefly, refresh the connection, and analyze again.</dd>
+          <dt>The map is empty or unavailable</dt><dd>Identify audio first. If a map error is displayed, retry it. For Azure, check vector retrieval/storage and index-update permission. Recognition can still succeed independently.</dd>
+          <dt>3D does not spin</dt><dd>Select 3D, keep the tab visible and focused, and check the system's reduced-motion preference. Drag to rotate manually.</dd>
+          <dt>Preferences or background cannot be saved</dt><dd>Check browser site-storage restrictions. Appearance can still apply during this visit, but may not persist.</dd>
+          <dt>Qdrant reports a storage lock</dt><dd>Run only one app process against the data directory. Stop the existing server with Ctrl+C before starting another; do not use multiple workers.</dd>
+        </dl>
+      </section>
+      <section id="setup">
+        <h2>10. Installation and operation</h2>
+        <p>Python 3.11 is recommended. From the supplied project folder in PowerShell:</p>
+        <pre><code>python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --index-url https://download.pytorch.org/whl/cpu --no-deps torch==2.5.1+cpu torchaudio==2.5.1+cpu
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe prepare_assets.py
+.\start.ps1</code></pre>
+        <p>Dependency installation requires internet access. The local mode needs no Docker, separate Qdrant service, Azure credentials, or frontend build. Model assets are prepared from the supplied files rather than downloaded at runtime.</p>
+        <p>If PowerShell blocks scripts, start Python directly without changing execution policy:</p>
+        <pre><code>.\.venv\Scripts\python.exe -m uvicorn app:app --host 127.0.0.1 --port 8765</code></pre>
+        <p>Stop the server with Ctrl+C. Use <code>.\start.ps1 -Port 8766</code> for a different port. Run only one instance per data directory. Later starts reuse cached reference embeddings.</p>
+        <p>Local persistence is in <code>data\voices.sqlite3</code> and <code>data\qdrant</code>; bundled weights and WAVs are in <code>data\model</code> and <code>data\references</code>. Consult the project's README for developer API, persistence, and test details.</p>
+      </section>
+      <section id="reports">
+        <h2>11. Export analysis reports</h2>
+        <p>After identification, use <strong>Export analysis</strong> in the Recognition result panel. Exports are unavailable while recording or processing. They use the applied criteria and server timings from that result, not later edits to Match criteria.</p>
+        <ul>
+          <li><strong>Printable HTML:</strong> a standalone report with scores, backend, timestamps, criteria, audio duration, warnings, expected test speaker, and a snapshot of the current 2D/3D Spotlight view. Download, open in a browser, and use Ctrl+P to print or save as PDF. Capturing stops automatic spin. If the map is unavailable, the report states this explicitly.</li>
+          <li><strong>CSV:</strong> one row per displayed candidate, with repeated analysis metadata and signed numeric cosine scores. A result with no candidates still exports one metadata row. Text that could be interpreted as a spreadsheet formula is prefixed with an apostrophe.</li>
+          <li><strong>JSON:</strong> structured data with schema version 1, displayed candidates, decision, applied thresholds, timing, and projection/camera metadata. The image is included only in HTML.</li>
+        </ul>
+        <p>The export records the analyzed Top N, current display limit, and exported row count. Lowering Top N trims exported candidates just as it trims the visible list. Analysis completion and export timestamps are UTC. Timings exclude browser/network time.</p>
+        <aside class="note">Reports contain names, audio labels and derived visualization data. Protect downloaded files. No audio or raw embeddings are exported, and the app does not store report files on the server.</aside>
+      </section>
+      <section id="guided-demo">
+        <h2>12. Guided demo</h2>
+        <p>Select the <strong>play-circle icon in the top bar</strong> to start a six-step walkthrough. It is non-modal, so you can keep interacting with the application.</p>
+        <ol>
+          <li>Use <strong>Show control</strong> to open Test audio; select and explicitly load a held-out clip.</li>
+          <li>Click Identify speaker in the app. In Azure mode this sends the query embedding to your configured service.</li>
+          <li>Inspect the decision, signed similarities, gap, and expected speaker.</li>
+          <li>Select 3D and try rotating, panning, zooming, or optional spin. Skip this step if the map is unavailable.</li>
+          <li>Optionally export a report before moving on.</li>
+          <li>Optionally switch backend yourself and identify the same audio again. Azure setup and initialization still require your existing explicit configuration and consent. Compare the exported reports manually; libraries may differ.</li>
+        </ol>
+        <p>Use Back, Next, or Skip step to control progress. The guide never runs analysis, loads audio, switches backends, enrolls voices, or initializes Azure automatically. Close it with X or Escape without cancelling requests or clearing audio/results. Navigating to Speaker library closes it; reopening restarts from step one. Reduced-motion settings continue to apply.</p>
+      </section>
+      <footer>Speaker Identification &middot; Version 1.0 &middot; <a href="#quick-start">Back to quick start</a></footer>
+    </main>
+  </div>
+</body>
+</html>

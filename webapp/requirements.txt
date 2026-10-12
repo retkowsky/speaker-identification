@@ -1,0 +1,25 @@
+# Validated with Python 3.11 on Windows. Keep torch and torchaudio paired.
+# For CPU-only installs, preinstall their +cpu wheels as documented in README.md.
+# A ==2.5.1 requirement also accepts the preinstalled 2.5.1+cpu build.
+torch==2.6.0
+torchaudio==2.6.0
+speechbrain==1.0.3
+numpy==2.2.6
+scipy==1.15.3
+soundfile==0.13.1
+
+# Local web server and its directly imported APIs.
+fastapi==0.135.1
+starlette==1.7.0
+pydantic==2.13.5
+uvicorn==0.41.0
+python-dotenv==1.1.1
+
+# Vector databases and server-side Azure authentication.
+qdrant-client==1.15.1
+azure-core==1.41.0
+azure-search-documents==11.6.0
+azure-identity==1.25.1
+
+# Also used by FastAPI TestClient in the existing Python test suite.
+httpx==0.28.1

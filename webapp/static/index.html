@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-palette="ocean" data-font="tahoma">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Speaker Identification</title>
+  <script src="/static/theme.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/demo.css">
+  <script src="/static/i18n.js" defer></script>
+  <script src="/static/appearance.js" defer></script>
+  <script src="/static/demo.js" defer></script>
+  <script src="/static/presentation.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Speaker Identification home" data-i18n-aria-label="home"><span class="logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="brand-name">Speaker Identification</span></a>
+    <div class="top-actions">
+      <span id="processing-badge" class="badge processing-badge" role="status"><svg id="processing-local-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8m-4-5v5"/></svg><svg id="processing-cloud-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" hidden><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 8a5 5 0 0 0 1 10Z"/></svg><span id="processing-badge-label">LOCAL</span></span>
+      <label class="preference-control backend-control"><span class="visually-hidden" data-i18n="backend">Search backend</span><select id="backend-select"><option value="qdrant" data-i18n="qdrantOption">Qdrant / Local</option><option value="azure" data-i18n="azureOption">Azure AI Search / Cloud</option></select></label>
+      <button id="azure-settings" type="button" class="secondary" aria-controls="cloud-panel" aria-expanded="false" data-i18n="azureSettings" hidden>Azure AI Search</button>
+      <span class="toolbar-divider" aria-hidden="true"></span>
+      <button id="guided-demo-start" class="icon-button toolbar-icon" type="button" aria-label="Guided demo" title="Guided demo" data-i18n-aria-label="guidedDemo" data-i18n-title="guidedDemo" aria-controls="guided-demo-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></svg></button>
+      <details id="criteria-menu" class="toolbar-menu criteria-menu" name="toolbar-settings">
+        <summary id="criteria-toggle" class="icon-button" aria-controls="criteria-panel" aria-label="Match criteria" title="Match criteria" data-i18n-aria-label="criteria" data-i18n-title="criteria"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h5m4 0h7M4 17h9m4 0h3"/><circle cx="11" cy="7" r="2"/><circle cx="15" cy="17" r="2"/></svg></summary>
+        <section id="criteria-panel" class="toolbar-panel criteria-panel" aria-labelledby="tuning-title">
+          <h2 id="tuning-title" data-i18n="criteria">Match criteria</h2>
+          <div class="criteria"><label><span data-i18n="threshold">Minimum similarity</span><input id="threshold" type="number" min="0" max="1" step="0.01" value="0.5" required><span data-i18n="thresholdHint">Reject weaker matches.</span></label><label><span data-i18n="minGap">Minimum candidate gap</span><input id="min-gap" type="number" min="0" max="1" step="0.01" value="0.05" required><span data-i18n="minGapHint">Reject ambiguous matches.</span></label></div>
+          <p class="hint" data-i18n="criteriaHint">Starting values only, not calibrated for your speakers. Results below either criterion are labeled Unknown speaker. Music and overlapping speakers can produce unreliable results.</p>
+          <p class="hint" data-i18n="criteriaNextAnalysis">Changes apply to the next analysis.</p>
+        </section>
+      </details>
+      <details id="appearance-menu" class="toolbar-menu" name="toolbar-settings">
+        <summary id="appearance-toggle" class="secondary" aria-controls="appearance-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg><span data-i18n="appearance">Appearance</span><svg class="menu-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div id="appearance-panel" class="toolbar-panel">
+      <label class="preference-control"><span data-i18n="palette">Color palette</span><select id="palette-select"><option value="amber-dark" data-i18n="amberDark">Amber / Dark</option><option value="amber-light" data-i18n="amberLight">Amber / Light</option><option value="forest-dark" data-i18n="forestDark">Forest / Dark</option><option value="forest-light" data-i18n="forestLight">Forest / Light</option><option value="ocean-dark" data-i18n="oceanDark">Ocean / Dark</option><option value="ocean-light" data-i18n="oceanLight">Ocean / Light</option><option value="rose-dark" data-i18n="roseDark">Rose / Dark</option><option value="rose-light" data-i18n="roseLight">Rose / Light</option></select></label>
+      <label class="preference-control"><span data-i18n="font">Font</span><select id="font-select"><option value="arial">Arial</option><option value="calibri">Calibri</option><option value="consolas">Consolas</option><option value="georgia">Georgia</option><option value="segoe">Segoe UI</option><option value="tahoma">Tahoma</option><option value="times">Times New Roman</option><option value="verdana">Verdana</option></select></label>
+      <div class="preference-control"><span data-i18n="background">Background</span><div class="background-actions"><button id="background-import" class="secondary" disabled>Import image</button><button id="background-remove" class="icon-button" data-i18n-aria-label="backgroundRemove" data-i18n-title="backgroundRemove" disabled>&times;</button></div><input id="background-input" type="file" accept="image/png,image/jpeg,image/webp" hidden></div>
+        </div>
+      </details>
+      <label class="preference-control language-control"><span class="visually-hidden" data-i18n="language">Language</span><select id="language-select" data-i18n-title="language"><option value="en" lang="en" aria-label="English">EN</option><option value="fr" lang="fr" aria-label="Français">FR</option></select></label>
+      <button id="demo-reset" class="text-button toolbar-clear"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14m-11 0V4h8v3M7 7l1 13h8l1-13m-7 4v5m4-5v5"/></svg><span data-i18n="resetDemo">Clear</span></button>
+    </div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="eyebrow" data-i18n="workspace">Workspace</div>
+      <nav aria-label="Workspace navigation" data-i18n-aria-label="navigation">
+        <button class="nav-item active" data-page="identify" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 10v4m4-8v12m4-15v18m4-15v12m4-8v4"/></svg><span data-i18n="identification">Identification</span></button>
+        <button class="nav-item" data-page="library"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 21v-4a6 6 0 0 1 12 0v4m2-17a3 3 0 0 1 0 6m1 4a5 5 0 0 1 3 4v3"/></svg><span data-i18n="library">Speaker library</span><span id="nav-count" class="count">0</span></button>
+        <a id="documentation-link" class="nav-item documentation-link" href="/static/documentation.html" target="_blank" rel="noopener noreferrer" aria-label="Documentation (English, opens in a new tab)" data-i18n-aria-label="documentationHint" data-i18n-title="documentationHint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h11l5 5v13H4zM14 3v6h6M8 13h8m-8 4h8"/></svg><span data-i18n="documentation">Documentation</span></a>
+      </nav>
+      <div class="sidebar-bottom"><div class="model-icon">EC</div><strong>ECAPA-TDNN</strong><span data-i18n="modelDetails">SpeechBrain / 192 dimensions</span><div class="sidebar-rule"></div>      <span data-i18n="localInfo">Embeddings are computed on this computer. Matching uses the selected database.</span></div>
+    </aside>
+    <div id="sidebar-resizer" class="sidebar-resizer" role="separator" tabindex="0" aria-orientation="vertical" aria-controls="sidebar" aria-valuemin="160" aria-valuemax="420" aria-valuenow="220" data-i18n-aria-label="resizeSidebar" data-i18n-title="resizeSidebar"></div>
+    <main>
+      <div id="notice" class="notice" role="alert" hidden></div>
+      <div id="success" class="notice success" role="status" hidden></div>
+      <section id="cloud-panel" class="card cloud-panel" aria-labelledby="cloud-title" hidden>
+        <div class="card-heading"><h2 id="cloud-title" data-i18n="cloudTitle">Azure AI Search</h2><button id="close-cloud-panel" type="button" class="icon-button" data-i18n-aria-label="closeAzureSettings" data-i18n-title="closeAzureSettings" aria-label="Close Azure AI Search" title="Close Azure AI Search">&times;</button></div>
+        <p data-i18n="cloudInfo">Voice embeddings are computed locally. Cloud search sends embeddings to your Azure service. Cloud enrollment stores embeddings and names in a separate index; raw audio is not uploaded.</p>
+        <p id="cloud-status" role="status"></p>
+        <p id="cloud-setup-help" class="hint" data-i18n="cloudSetupHelp">Enter your endpoint and dedicated index below. Authentication stays on the server.</p>
+        <form id="azure-config-form" class="azure-config-form">
+          <label><span data-i18n="azureEndpoint">Azure AI Search endpoint</span><input id="azure-endpoint" type="url" maxlength="2048" placeholder="https://your-service.search.windows.net" autocomplete="off" spellcheck="false" disabled></label>
+          <label><span data-i18n="azureIndex">Index name</span><input id="azure-index" type="text" minlength="2" maxlength="128" required placeholder="speaker-identification" autocomplete="off" spellcheck="false" disabled></label>
+          <p class="hint" data-i18n="azureConfigHint">Settings are saved on this computer and shared across browser tabs. Clear the endpoint to disable cloud processing. Credentials stay on the server.</p>
+          <div class="config-actions"><button id="save-azure-config" type="submit" class="secondary" data-i18n="saveAzureConfig" disabled>Save settings</button><button id="check-azure" type="button" class="secondary" data-i18n="checkAzure">Check connection</button></div>
+        </form>
+        <label class="consent" id="cloud-consent-label"><input type="checkbox" id="cloud-consent"><span data-i18n="cloudSeedConsent">I authorize creating this dedicated index and uploading the 41 bundled reference embeddings and speaker labels to Azure.</span></label>
+        <button id="initialize-azure" class="secondary" data-i18n="initializeAzure">Initialize / repair reference index</button>
+      </section>
+      <section id="identify-page" aria-labelledby="page-title">
+        <div class="page-heading"><div><div class="eyebrow" data-i18n="eyebrow">VOICE EMBEDDINGS / SPEAKER SEARCH</div><h1 id="page-title" data-i18n="pageTitle">Speaker identification</h1><p data-i18n="pageSubtitle">Speaker identification with Azure or Qdrant using voice embeddings</p></div><span class="status-pill" id="engine-status">Connecting to model...</span></div>
+        <div class="demo-journey"><span data-i18n="demoJourney">VOICE → 192-D EMBEDDING → SIMILARITY SEARCH</span><strong id="demo-stage" role="status"></strong></div>
+        <div class="metrics">
+          <div class="metric"><span data-i18n="enrolledSpeakers">Enrolled speakers</span><strong id="speaker-count">--</strong><small data-i18n="enrolledHint">Bundled + your own voices</small></div>
+          <div class="metric"><span data-i18n="referenceSamples">Reference samples</span><strong id="sample-count">--</strong>          <small data-i18n="referenceHint">Enrollment samples only</small></div>
+          <div class="metric"><span data-i18n="modelInput">Model input</span><strong>16 <em>kHz</em></strong><small data-i18n="resampling">Automatic resampling / Mono</small></div>
+          <div class="metric"><span data-i18n="method">Matching method</span><strong class="metric-word" data-i18n="cosine">Cosine</strong><small data-i18n="probabilityHint">Similarity, not a probability</small></div>
+        </div>
+        <div class="workspace">
+          <section class="card input-card" aria-labelledby="input-title">
+            <div class="card-heading"><div><span class="section-number">01</span><h2 id="input-title" data-i18n="audioInput">Audio input</h2></div><span class="badge" data-i18n="durationLimit">2-30 SECONDS</span></div>
+            <div class="source-tabs" aria-label="Audio source" data-i18n-aria-label="audioSource"><button id="mic-tab" data-source="mic" aria-pressed="true"><svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="13" rx="4"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3m-4 0h8"/></svg><span data-i18n="microphone">Microphone</span></button><button id="wav-tab" data-source="wav" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg><span data-i18n="upload">Upload WAV</span></button><button id="test-tab" data-source="test" aria-pressed="false"><span data-i18n="testAudio">Test audio</span></button></div>
+            <div id="mic-input" class="capture">
+              <div class="microphone-controls">
+                <label for="microphone-select" data-i18n="microphoneChoice">Input microphone</label>
+                <select id="microphone-select" aria-describedby="microphone-hint"></select>
+                <button id="refresh-microphones" type="button" class="secondary" data-i18n="microphoneRefresh">Allow / refresh microphones</button>
+                <p id="microphone-hint" class="hint"></p>
+              </div>
+              <div class="mic-orb" id="mic-orb"><svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="13" rx="4"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3m-4 0h8"/></svg></div>
+              <h3 id="capture-title">Ready when you are.</h3><p id="capture-subtitle">One speaker. A quiet space. Your natural voice.</p>
+              <canvas id="waveform" width="600" height="100" aria-label="Microphone waveform" data-i18n-aria-label="waveform"></canvas>
+              <div class="audio-energy"><span id="input-level-label"></span><meter id="input-level" min="0" max="1" value="0" data-i18n-aria-label="inputLevel" aria-label="Microphone signal level"></meter></div>
+              <figure class="spectrogram-panel">
+                <div class="spectrogram-heading"><span data-i18n="liveSpectrum">Live voice spectrum</span><span>0–8 kHz</span></div>
+                <canvas id="spectrogram" width="600" height="96" role="img" data-i18n-aria-label="spectrogramLabel" aria-label="Live microphone spectrogram"></canvas>
+                <figcaption data-i18n="spectrumHint">Real microphone frequencies; brighter means stronger. Not an identity score.</figcaption>
+              </figure>
+              <div class="record-line"><button id="record-button" class="secondary"><span class="record-dot"></span><span id="record-label">Start recording</span></button><span id="timer" class="mono">00:00</span></div>
+              <p class="hint" data-i18n="recordingHint">Records up to 30 seconds. Review your audio before analysis.</p>
+            </div>
+            <div id="wav-input" hidden>
+              <label class="dropzone" id="dropzone" for="file-input"><svg viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg><strong data-i18n="dropTitle">Drop a WAV file here</strong><span data-i18n="dropHint">or click to browse your computer</span><small data-i18n="fileLimits">Mono or stereo / 8-192 kHz / Up to 20 MB</small></label>
+              <input type="file" id="file-input" accept=".wav,audio/wav,audio/x-wav" class="file-input" aria-label="Choose a WAV file" data-i18n-aria-label="chooseWav">
+              <button type="button" id="browse-button" class="secondary" data-i18n="chooseWav">Choose a WAV file</button>
+            </div>
+            <div id="test-input" class="test-input" hidden>
+              <label for="test-audio-select" data-i18n="testListLabel">Notebook test files (df_samples_2)</label>
+              <p class="hint" data-i18n="testSplitHint">Segment 2 is held out for testing. Only segment 1 is enrolled as a reference.</p>
+              <select id="test-audio-select" size="6"></select>
+              <p id="test-file-count" class="hint"></p>
+              <button id="load-test-audio" class="secondary" data-i18n="loadTestAudio">Load selected test file</button>
+            </div>
+            <div id="audio-preview" class="audio-preview" hidden><div class="preview-heading"><span id="audio-name"></span><button id="clear-audio" class="text-button" data-i18n="clear">Clear</button></div><audio id="audio-player" controls preload="metadata"></audio></div>
+            <div class="input-actions"><button id="identify-button" class="primary" disabled><span data-i18n="identify">Identify speaker</span><span aria-hidden="true">&rarr;</span></button><button id="enroll-button" class="secondary" data-i18n="enroll" disabled>Enroll this voice</button></div>
+            <div class="input-foot"><span class="lock-icon" aria-hidden="true">&#9671;</span><span data-i18n="audioPrivacy">Analysis audio is not saved. Enrollment stores an embedding only.</span></div>
+          </section>
+          <section class="card result-card" aria-labelledby="result-title">
+            <div class="card-heading"><div><span class="section-number">02</span><h2 id="result-title" tabindex="-1" data-i18n="resultTitle">Recognition result</h2></div><span class="badge" id="result-badge">AWAITING AUDIO</span></div>
+            <form id="top-n-form" class="top-n-controls">
+              <label for="top-n"><span data-i18n="topN">Top N speakers</span><input id="top-n" type="number" min="1" step="1" value="5" required aria-describedby="top-n-hint"></label>
+              <button id="update-top-n" type="submit" class="secondary" data-i18n="updateTopN" disabled>Update results</button>
+            </form>
+            <p id="top-n-hint" class="hint top-n-hint" data-i18n="topNHint">Choose a positive whole number. The list updates immediately; additional matches load when you confirm the change. Fewer speakers may be available.</p>
+            <div id="result-empty" class="empty-result"><div class="empty-graphic" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><h3 data-i18n="emptyTitle">A match starts with a sample.</h3><p data-i18n="emptyHint">Record your voice or upload a WAV. Your closest speakers will appear here.</p><button id="demo-button" class="text-button"><span data-i18n="demo">Try a bundled reference</span> &rarr;</button></div>
+            <div id="result-busy" class="empty-result" role="status" hidden><div class="spinner"></div><h3 data-i18n="busyTitle">Listening for the similarities...</h3><p data-i18n="busyHint">Computing a voice embedding on this computer.</p></div>
+            <div id="result-content" hidden>
+              <div class="match-summary"><div id="result-avatar" class="avatar">--</div><div><span id="result-overline" class="eyebrow">CLOSEST ENROLLED VOICE</span><h3 id="match-name"></h3><p id="match-description"></p></div></div>
+              <div class="score-heading"><span data-i18n="bestSimilarity">Best cosine similarity</span><strong id="best-score" class="mono">--</strong></div><div id="best-score-track"><progress id="score-bar" max="1" value="0" aria-label="Best cosine similarity" data-i18n-aria-label="bestSimilarity"></progress><div id="best-threshold-marker"></div></div>
+              <div id="best-score-axis"></div>
+              <div class="table-wrap"><table><thead><tr><th scope="col" data-i18n="rank">Rank</th><th scope="col" data-i18n="speaker">Speaker</th><th scope="col" data-i18n="similarity">Similarity</th></tr></thead><tbody id="candidates"></tbody></table></div>
+              <p id="top-n-summary" class="hint"></p>
+              <p class="hint" data-i18n="similarityScale">Bars run from 0 to 1. Negative scores have empty bars; numbers show the actual cosine similarity.</p>
+              <p class="hint" id="similarity-threshold-hint"></p>
+              <div class="result-stats"><div><span data-i18n="gap">Candidate gap</span><strong id="result-gap" class="mono"></strong></div><div><span data-i18n="audioLength">Audio length</span><strong id="result-duration" class="mono"></strong></div><div><span data-i18n="analysisTime">Analysis time</span><strong id="result-time" class="mono"></strong></div></div>
+              <p class="hint" id="result-warnings"></p>
+              <p class="test-evaluation" id="test-evaluation" hidden></p>
+              <div id="report-exports" class="report-exports">
+                <h3 id="report-title" tabindex="-1" data-i18n="reportExport">Export analysis</h3>
+                <p class="hint" data-i18n="reportPrivacy">Reports contain speaker names and scores. Keep them private. Audio and raw embeddings are not exported.</p>
+                <div class="report-actions">
+                  <button id="export-html" type="button" class="secondary" data-i18n="reportHTML" disabled>Printable HTML</button>
+                  <button id="export-csv" type="button" class="secondary" disabled>CSV</button>
+                  <button id="export-json" type="button" class="secondary" disabled>JSON</button>
+                </div>
+              </div>
+            </div>
+            <div class="result-foot" data-i18n="resultDisclaimer">A similarity score is not proof of identity. Not for authentication.</div>
+            <span id="result-live" class="visually-hidden" role="status" aria-live="polite"></span>
+          </section>
+          <section class="card constellation-card" aria-labelledby="constellation-title">
+            <div class="card-heading"><div><span class="section-number">03</span><h2 id="constellation-title" tabindex="-1" data-i18n="constellationTitle">Match spotlight</h2></div><span id="constellation-badge" class="badge">LOCAL / PCA</span></div>
+            <p id="constellation-explanation" class="hint" data-i18n="constellationExplanation">Real reference samples projected from 192 dimensions into 2D or 3D. Highlighted candidates use full-vector cosine similarity, not projected distance.</p>
+            <p id="constellation-status" role="status"></p>
+            <button id="constellation-retry" class="secondary" data-i18n="constellationRetry" hidden>Retry map</button>
+            <div id="constellation-content" hidden>
+              <div class="map-toolbar">
+                <div class="map-dimensions" role="group" data-i18n-aria-label="mapDimensions" aria-label="Plot dimensions">
+                  <button id="map-2d" type="button" class="secondary" aria-pressed="true">2D</button>
+                  <button id="map-3d" type="button" class="secondary" aria-pressed="false">3D</button>
+                </div>
+                <button id="map-spin" type="button" class="secondary" aria-pressed="false" hidden>Spin</button>
+                <div class="map-zoom-control">
+                  <label for="map-zoom" data-i18n="mapZoom">Zoom</label>
+                  <button id="map-zoom-out" class="secondary" data-i18n-aria-label="mapZoomOut">−</button>
+                  <input id="map-zoom" type="range" min="0.5" max="3" step="0.1" value="1">
+                  <button id="map-zoom-in" class="secondary" data-i18n-aria-label="mapZoomIn">+</button>
+                  <output id="map-zoom-value" for="map-zoom" aria-live="off">100%</output>
+                </div>
+                <button id="map-reset" class="secondary" data-i18n="mapReset">Reset view</button>
+              </div>
+              <div class="map-viewport">
+                <span id="map-view-badge" class="map-view-badge" aria-hidden="true">2D / PCA</span>
+                <svg id="constellation-svg" viewBox="0 0 760 450" role="group" tabindex="0" aria-labelledby="constellation-title" aria-describedby="constellation-explanation map-mouse-hint"></svg>
+              </div>
+              <div class="constellation-legend"><span class="match-legend" data-i18n="constellationMatched">Matched sample</span><span class="reference-legend" data-i18n="constellationReferences">Other reference samples</span><span id="constellation-query-legend" data-i18n="constellationQuery">Your recording</span></div>
+              <p class="hint" data-i18n="constellationConnections">Lines follow actual cosine matches, not projected distance</p>
+              <p id="map-mouse-hint" class="hint" data-i18n="mapMouseHint">Drag to pan; scroll to zoom. Focus the map and use arrow keys to pan.</p>
+              <p id="map-motion-hint" class="hint" data-i18n="mapReducedMotion" hidden>Automatic spin is disabled with reduced motion. Drag or use arrow keys to rotate manually.</p>
+              <p class="hint" data-i18n="mapLabelsHint">Only top candidates and the hovered or selected sample are labeled where space allows. Select a dot for full details.</p>
+              <p id="constellation-stats" class="hint"></p>
+              <p id="constellation-limited" class="hint" data-i18n="constellationLimited" hidden>Too little reference variation for all displayed dimensions; points may overlap or lie on a line or plane.</p>
+              <label class="map-select-label" for="constellation-select" data-i18n="constellationExplore">Explore a reference point</label>
+              <select id="constellation-select"></select>
+              <p id="constellation-detail" class="hint" role="status"></p>
+            </div>
+          </section>
+          <section class="library-callout"><div class="callout-icon" aria-hidden="true">+</div><div><h3 data-i18n="calloutTitle">Your voice belongs in the library.</h3><p data-i18n="calloutHint">Record a clear reference, then choose Enroll this voice. Test identification with a different recording.</p><button class="text-button" id="view-library"><span data-i18n="exploreLibrary">Explore speaker library</span> &rarr;</button></div></section>
+        </div>
+      </section>
+      <section id="library-page" aria-labelledby="library-title" hidden>
+        <div class="page-heading"><div>        <div class="eyebrow" data-i18n="libraryEyebrow">REFERENCE VOICES / SELECTED DATABASE</div><h1 id="library-title" data-i18n="library">Speaker library</h1><p data-i18n="librarySubtitle">Known voices, ready to be compared. Add your own to get started.</p></div><button id="new-speaker" class="primary">+ <span data-i18n="newSpeaker">Enroll a voice</span></button></div>
+        <div class="library-toolbar"><label for="speaker-search" data-i18n="findSpeaker">Find a speaker</label><input id="speaker-search" type="search" placeholder="Search by name..." data-i18n-placeholder="searchPlaceholder"><span id="library-summary" class="hint"></span></div>
+        <p class="library-explanation" data-i18n="libraryExplanation">Bundled voices are sample IDs, not verified identities. Your enrolled recordings are discarded after embedding. Only bundled references have playback.</p>
+        <div id="speaker-list" class="speaker-grid"></div>
+        <p id="library-empty" class="hint" data-i18n="noSpeakers" hidden>No speakers match your search.</p>
+      </section>
+      <footer class="footer"><span><span class="dot"></span><span id="processing-footer">Speaker Identification / Qdrant</span></span><span data-i18n="permissionHint">Process only voices you have permission to use.</span><button id="refresh-button" class="text-button" data-i18n="refresh">Refresh connection</button></footer>
+    </main>
+  </div>
+  <aside id="guided-demo-panel" class="guided-demo-panel" aria-labelledby="guided-demo-title" hidden>
+    <div class="card-heading"><h2 id="guided-demo-title" tabindex="-1" data-i18n="guidedDemo">Guided demo</h2><button id="guided-demo-close" class="icon-button" type="button" data-i18n-aria-label="tourClose" aria-label="Close guided demo">&times;</button></div>
+    <div class="guided-demo-body">
+      <p id="guided-demo-progress" class="eyebrow" role="status" aria-live="polite"></p>
+      <h3 id="guided-demo-step"></h3>
+      <p id="guided-demo-description"></p>
+      <p id="guided-demo-hint" class="hint"></p>
+    </div>
+    <div class="tour-actions"><button id="guided-demo-show" class="secondary" type="button" data-i18n="tourShow">Show control</button><button id="guided-demo-back" class="secondary" type="button" data-i18n="tourBack">Back</button><button id="guided-demo-next" class="primary" type="button" data-i18n="tourNext">Next</button><button id="guided-demo-skip" class="text-button" type="button" data-i18n="tourSkip">Skip step</button></div>
+  </aside>
+  <dialog id="enroll-dialog"><form id="enroll-form" novalidate><div class="dialog-heading"><div><div class="eyebrow" data-i18n="library">Speaker library</div><h2 data-i18n="enrollTitle">Give this voice a name.</h2></div><button type="button" id="close-dialog" class="icon-button" aria-label="Close enrollment" data-i18n-aria-label="closeEnrollment">&times;</button></div><p data-i18n="enrollHint">The selected audio will become a reference embedding. The recording itself will not be stored.</p><label class="field-label" for="speaker-name" data-i18n="speakerName">Speaker name</label><input id="speaker-name" name="name" maxlength="60" placeholder="e.g. My voice" data-i18n-placeholder="namePlaceholder" required autocomplete="off"><label class="consent"><input id="consent" type="checkbox" required><span data-i18n="consent">I have permission to enroll this voice and store its embedding locally.</span></label><p id="enroll-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" id="cancel-enroll" class="secondary" data-i18n="cancel">Cancel</button><button type="submit" id="save-speaker" class="primary">Save speaker</button></div></form></dialog>
+  <dialog id="welcome-dialog" class="welcome-dialog" aria-labelledby="welcome-title" aria-describedby="welcome-description">
+    <div class="logo welcome-logo" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="eyebrow" data-i18n="welcomeEyebrow">WELCOME</div>
+    <h2 id="welcome-title">Speaker Identification</h2>
+    <p id="welcome-description" data-i18n="welcomeDescription">Explore voice identification with Azure AI Search and Qdrant. Record, compare, and visualize voice embeddings.</p>
+    <div class="welcome-details">
+      <p class="welcome-author"><span data-i18n="welcomeAuthor">Author :</span> <a href="mailto:serge.retkowsky@microsoft.com">serge.retkowsky@microsoft.com</a></p>
+      <div class="welcome-release"><span>Version 1.0</span><time datetime="2026-10-05">05-10-2026</time></div>
+    </div>
+    <form method="dialog"><button id="welcome-start" type="submit" class="primary" data-i18n="welcomeStart" autofocus>Get started</button></form>
+  </dialog>
+</body>
+</html>

@@ -83,6 +83,13 @@ python -m venv .venv
 
 Keep the trusted `voices embeddings.zip` source archive in `webapp/` for initial asset preparation. Open the complete private URL printed by `start.ps1`; each launch generates a new access token. Local Qdrant mode does not require Docker, Azure, or a separate database service.
 
+<img src="capture1.png"><br>
+<br>
+<img src="capture2.png"><br>
+<br>
+<img src="capture3.png"><br>
+<br>
+
 ### Notebook prerequisites
 
 - Python 3.8+

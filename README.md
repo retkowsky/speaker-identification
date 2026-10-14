@@ -1,4 +1,4 @@
-# 🎙️ Speaker Identification using Voice audio embeddings and Azure AI Search or Qdrant
+# 🎙️ Speaker Recognition using Voice audio embeddings and Azure AI Search or Qdrant
 
 <img src="image1.png">
 
@@ -24,7 +24,7 @@ Speaker identification with embeddings and Azure AI Search or Qdrant for edge ap
 
 ## Overview
 
-This repository contains implementations and experiments for **speaker identification** tasks using modern embedding techniques and vector search technologies. It includes the original Jupyter workflows and a local, browser-based application for interactive identification, enrollment, visualization, and report export.
+This repository contains implementations and experiments for **speaker recognition** tasks using modern embedding techniques and vector search technologies. It includes the original Jupyter workflows and a local, browser-based application for interactive identification, enrollment, visualization, and report export.
 
 ## Key Features
 
